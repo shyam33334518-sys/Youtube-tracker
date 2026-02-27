@@ -1,4 +1,5 @@
 const express = require("express");
+const axios = require("axios");
 const mongoose = require("mongoose");
 const axios = require("axios");
 const cron = require("node-cron");
@@ -110,5 +111,37 @@ cron.schedule("*/5 * * * *", async () => {
 });
 app.get("/", (req, res) => {
   res.send("YouTube Tracker Server Running 🚀");
+});
+app.get("/track/:videoId", async (req, res) => {
+  try {
+    const videoId = req.params.videoId;
+
+    const response = await axios.get(
+      "https://www.googleapis.com/youtube/v3/videos",
+      {
+        params: {
+          part: "snippet,statistics",
+          id: videoId,
+          key: process.env.YOUTUBE_API_KEY
+        }
+      }
+    );
+
+    if (!response.data.items.length) {
+      return res.status(404).json({ error: "Video not found" });
+    }
+
+    const video = response.data.items[0];
+
+    res.json({
+      title: video.snippet.title,
+      channel: video.snippet.channelTitle,
+      views: video.statistics.viewCount,
+      likes: video.statistics.likeCount || 0
+    });
+
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch video data" });
+  }
 });
 app.listen(PORT, () => console.log("Server running"));
