@@ -143,4 +143,7 @@ app.get("/track/:videoId", async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch video data" });
 });
+app.get("/hello", (req, res) => {
+  res.send("Hello working");
+});
 app.listen(PORT, () => console.log("Server running"));
