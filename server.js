@@ -108,5 +108,7 @@ cron.schedule("*/5 * * * *", async () => {
     console.log("Fetch error");
   }
 });
-
+app.get("/", (req, res) => {
+  res.send("YouTube Tracker Server Running 🚀");
+});
 app.listen(PORT, () => console.log("Server running"));
