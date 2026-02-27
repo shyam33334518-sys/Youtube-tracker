@@ -111,4 +111,7 @@ cron.schedule("*/5 * * * *", async () => {
 app.get("/", (req, res) => {
   res.send("YouTube Tracker Server Running 🚀");
 });
+app.get("/videos", (req, res) => {
+  res.json({ message: "Videos route working" });
+});
 app.listen(PORT, () => console.log("Server running"));
